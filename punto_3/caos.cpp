@@ -51,9 +51,7 @@ float derivada1_p2(float e, float q1, float q2){
 
 void der(float q1, float q2, float p1, float p2){
 	
-	//Declaro las derivadas 
-  	float kx_1, kx_2, kx_3, kx_4;
-	float kv_1, kv_2, kv_3, kv_4;
+  	
 }
 //MAIN
 int main() {
