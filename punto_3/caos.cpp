@@ -10,12 +10,6 @@ float a = 1/2*pow(2,(1/2));
 int t_max = 3000;
 float delta_t = 0.006;
 
-//Declaracion de las listas donde se guardan las constantes
-float cte_q1[4];
-float cte_q2[4];
-float cte_p1[4];
-float cte_p2[4];
-
 //Declaracion de la funcion que retorna la derivada q1
 float derivada1_q1(float p1);
 
@@ -40,7 +34,7 @@ float derivada_q2(float p2){
 	return p2;
 }
 //Defino derivada de p1
-float derivada1_p1(float e, float q1){
+float derivada_p1(float e, float q1){
 	float a = 2.0*q1;
 	float b = (4*q1*q1)+(e*e);
 	float c = pow(b,(3/2)); 
@@ -48,7 +42,7 @@ float derivada1_p1(float e, float q1){
 }
 
 //Defino derivada de p2
-float derivada1_p2(float e, float q1, float q2){
+float derivada_p2(float e, float q1, float q2){
 	float d = q1-q2;				
 	float f = (d*d)+((e*e)/4);
 	float g = d/(pow(f,(3/2)));
@@ -67,40 +61,59 @@ float derivada1_p2(float e, float q1, float q2){
 //Defino la funcion que soluciona las ecuaciones diferenciales 
 void der(float q1, float q2, float p1, float p2){
 	
+	//Condiciones iniciales 
+	float q1_O = q1; 
+	float q2_O = q2;
+	float p1_O = p1;
+	float p2_O = p2;
+	
 	//Halla las constantes para q1
-	cte_q1[0] = derivada_q1(p1_O);
-	cte_q1[1] = derivada_q1(p1_O + ((delta_t*0.5)*cte_q1[0]));
-	cte_q1[2] = derivada_q1(p1_O + ((delta_t*0.5)*cte_q1[1]));
-	cte_q1[3] = derivada_q1(p1_O + (delta_t*cte_q1[2]));
+	float cte_q1_1 = derivada_q1(p1_O);
+	float cte_q1_2 = derivada_q1(p1_O + ((delta_t*0.5)*cte_q1_1));
+	float cte_q1_3 = derivada_q1(p1_O + ((delta_t*0.5)*cte_q1_2));
+	float cte_q1_4 = derivada_q1(p1_O + (delta_t*cte_q1_3));
 	
   	//Halla las constantes para q2
-	cte_q2[0] = derivada_q2(p2_O);
-	cte_q2[1] = derivada_q2(p2_O + ((delta_t*0.5)*cte_q2[0]));
-	cte_q2[2] = derivada_q2(p2_O + ((delta_t*0.5)*cte_q2[1]));
-	cte_q2[3] = derivada_q2(p2_O + (delta_t*cte_q2[2]));
+	float cte_q2_1 = derivada_q2(p2_O);
+	float cte_q2_2 = derivada_q2(p2_O + (delta_t*0.5*cte_q2_1) );
+	float cte_q2_3 = derivada_q2(p2_O + (delta_t*0.5*cte_q2_2) );
+	float cte_q2_4 = derivada_q2(p2_O + (delta_t*cte_q2_3) );
 
 	//Halla las constantes para p1
-	cte_p1[0] = derivada_p1(e, q1_O);
-	cte_p1[1] = derivada_q2(e, q1_O + ((delta_t*0.5)*cte_p1[0]));
-	cte_p1[2] = derivada_q2(e, q1_O + ((delta_t*0.5)*cte_p1[1]));
-	cte_p1[3] = derivada_q2(e, p1_O + (delta_t*cte_p1[2]));
+	float cte_p1_1 = derivada_p1(e, q1_O);
+	float cte_p1_2 = derivada_p1(e, q1_O + (delta_t*0.5*cte_p1_1) );
+	float cte_p1_3 = derivada_p1(e, q1_O + (delta_t*0.5*cte_p1_2) );
+	float cte_p1_4 = derivada_p1(e, q1_O + (delta_t*cte_p1_3) );
 
 	//Halla las constantes para p2
-	cte_p2[0] = derivada_p1(e, q2_O);
-	cte_p2[1] = derivada_q2(e, q2_O + ((delta_t*0.5)*cte_p2[0]));
-	cte_p2[2] = derivada_q2(e, q2_O + ((delta_t*0.5)*cte_p2[1]));
-	cte_p2[3] = derivada_q2(e, p2_O + (delta_t*cte_p2[2]));
+	float cte_p2_1 = derivada_p2(e, q1_O, q2_O);
+	float cte_p2_2 = derivada_p2(e, q1_O + (delta_t*0.5*cte_p2_1), q2_O + (delta_t*0.5*cte_p2_1));
+	float cte_p2_3 = derivada_p2(e, q1_O + (delta_t*0.5*cte_p2_2), q2_O + (delta_t*0.5*cte_p2_2));
+	float cte_p2_4 = derivada_p2(e, q1_O + (delta_t*cte_p2_3), p2_O + (delta_t*cte_p2_3));
 
-	//Solucion de la ecuacion usando las constantes 
-	
-	
+	//Calcula el siguiente paso 
+	float q1_n = q1_O + (delta_t/6.0)*(cte_q1_1 + 2.0*cte_q1_2 + 2.0*cte_q1_3 + cte_q1_4);
+	float q2_n = q2_O + (delta_t/6.0)*(cte_q2_1 + 2.0*cte_q2_2 + 2.0*cte_q2_3 + cte_q2_4);
+	float p1_n = p1_O + (delta_t/6.0)*(cte_p1_1 + 2.0*cte_p1_2 + 2.0*cte_p1_3 + cte_p1_4);
+	float p2_n = p1_O + (delta_t/6.0)*(cte_p2_1 + 2.0*cte_p2_2 + 2.0*cte_p2_3 + cte_p2_4);
+
+	//Pregunta si q1 cambia de signo
+	if(q1_O*q1_n < 0.0){
+	cout << q2_n <<endl;	
+	}
+
+	//Actualiza el los valores inciales para hacer el ciclo
+	q1_O = q1_n; 
+	q2_O = q2_n;
+	p1_O = p1_n;
+	p2_O = p2_n;
 }
 //MAIN
 int main() {
 
-for(int i = 0; i < 4; ++i){
-	der(q1_O,q2_O,p1_O,p2_O)
-	cout << cte_q1[i] <<endl;
+for(int i = 0; i < 3000/delta_t; i++){
+	der(a,-a,0.0,0.0);
+	
 }
 return 0;
 }
