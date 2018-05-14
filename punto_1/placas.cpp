@@ -42,7 +42,6 @@ for(int i = 0; i<w; i++){ // recorre filas
 	}
 }	
 
-cout<< w <<endl;
 
 return 0;
 }
