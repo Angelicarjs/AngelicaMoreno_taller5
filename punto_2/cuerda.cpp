@@ -17,7 +17,7 @@ float c = pow(T/p,(1/2));
 int t_max = 200;
 //deltas de tiempo y distancia en x (arbitrarios)
 float dt = 0.1;
-float dx = 0.1;
+float dx = 0.5;
 
 //Condicion de estabilidad 
 float r = c*(dt/dx);
@@ -63,7 +63,7 @@ for(int j=0; j<t_step; j++){
 
         	U_fut[i] = U_act[i] + (1.0/2.0)*alph*(U_act[i+1] - 2.0 * U_act[i] + U_act[i-1] );
 		
-		cout<< U_act[i] << endl;
+		cout<< i*dx <<" "<< U_act[i] << endl;
 		}
 	}
 
