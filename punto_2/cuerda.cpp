@@ -15,7 +15,7 @@ float L = 100.0;
 float c = pow(T/p,(1/2));
 //tiempo maximo hasta donde se debe hacer mover el gif
 int t_max = 200;
-//deltas de tiempo y distancia en x 
+//deltas de tiempo y distancia en x (arbitrarios)
 float dt = 0.1;
 float dx = 0.1;
 
@@ -38,6 +38,7 @@ double* U_fut = new double[x_step];
 //main
 int main(){
 //For que hace mi condicion inicial 
+
 	for(int i =0; i<x_step; i++){
 		double x = i*dx;
 		if(x <= 0.8*L){
@@ -46,14 +47,31 @@ int main(){
 		if(x > 0.8*L){
 			U_in[i]	= (5.0 - 5.0*x)/L;	
 		}
-	}
-
-//For que calcula el avance de la cuerda al solucional la PDE segun la ecuacion de onda
-	U_in = U_act;
-	for(int i=1;i<x_step;i++){
-        	U_fut[i] = U_act[i] + (1.0/2.0)*alph*(U_act[i+1] - 2.0 * U_act[i] + U_act[i-1] );
 	
 	}
 
+	for(int i=0; i<x_step; i++){
+		
+		U_act[i] = U_in[i];
+				
+	}	
+
+
+for(int j=0; j<t_step; j++){
+	//For que calcula el avance de la cuerda al solucional la PDE segun la ecuacion de onda
+	for(int i=1;i<x_step;i++){
+
+        	U_fut[i] = U_act[i] + (1.0/2.0)*alph*(U_act[i+1] - 2.0 * U_act[i] + U_act[i-1] );
+		
+		cout<< U_act[i] << endl;
+		}
+	}
+
+	//For que actualiza haciendo del U fututo el U actual
+	for(int i=0; i<x_step; i++){
+		
+		U_act[i] = U_fut[i];
+				
+	}
 	return 0;
 } 
